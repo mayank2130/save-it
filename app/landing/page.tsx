@@ -1,9 +1,19 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { badgeVariants } from "@/components/ui/badge";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import DarkMode from "@/components/DarkMode";
+import { Button } from "@/components/ui/button";
+import Overlay from "@/components/LoginOverlay/OverLay";
 
 function Page() {
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+
+  const toggleOverlay = () => {
+    setIsOverlayVisible(!isOverlayVisible);
+  };
+
   return (
     <div className="flex flex-col lg:flex-row">
       {/* Side Navigation */}
@@ -22,7 +32,11 @@ function Page() {
             Girls
           </Link>
         </div>
-        <div className="pb-5">Sign In</div>
+        <div className="pb-5">
+          {" "}
+          <button onClick={toggleOverlay}>Sign in</button>
+          <Overlay isVisible={isOverlayVisible} onClose={toggleOverlay} />
+        </div>
       </div>
 
       {/* Scroll List and search bar */}
@@ -59,6 +73,7 @@ function Page() {
               Badge
             </Link>
           </div>
+          <DarkMode />
         </div>
 
         {/* Card */}
@@ -77,7 +92,7 @@ function Page() {
         </div>
         <div className="flex flex-row">
           <div className="pl-64">
-            <div className="rounded-3xl bg-zinc-900 p-1 w-56 max-w-xs flex h-56 items-center flex-row justify-between border-black">
+            <div className="rounded-3xl bg-zinc-900 p-1 w-48 max-w-xs flex h-64 items-center flex-row justify-center border-black">
               <div className="space-y-7">
                 <div className="py-20">
                   <div className="text-2xl">Card List</div>
@@ -85,57 +100,10 @@ function Page() {
               </div>
             </div>
           </div>
-          <div className="pl-10">
-            <div className="rounded-3xl bg-zinc-900 p-1 w-56 max-w-xs flex h-56 items-center flex-row justify-between border-black">
-              <div className="space-y-7">
-                <div className="py-20">
-                  <div className="text-2xl">Card List</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="pl-64 pb-5 pt-10">
-          <p>Favourites</p>
-        </div>
-        <div className="flex flex-row">
-          <div className="pl-64">
-            <div className="rounded-3xl bg-zinc-900 p-1 w-56 max-w-xs flex h-56 items-center flex-row justify-between border-black">
-              <div className="space-y-7">
-                <div className="py-20">
-                  <div className="text-2xl">Card List</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="pl-10">
-            <div className="rounded-3xl bg-zinc-900 p-1 w-56 max-w-xs flex h-56 items-center flex-row justify-between border-black">
-              <div className="space-y-7">
-                <div className="py-20">
-                  <div className="text-2xl">Card List</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="pl-64 pb-5 pt-10">
-          <p>Favourites</p>
-        </div>
-        <div className="flex flex-row">
-          <div className="pl-64">
-            <div className="rounded-3xl bg-zinc-900 p-1 w-56 max-w-xs flex h-56 items-center flex-row justify-between border-black">
-              <div className="space-y-7">
-                <div className="py-20">
-                  <div className="text-2xl">Card List</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="pl-10">
-            <div className="rounded-3xl bg-zinc-900 p-1 w-56 max-w-xs flex h-56 items-center flex-row justify-between border-black">
-              <div className="space-y-7">
-                <div className="py-20">
+          <div className="pl-4">
+            <div className="rounded-3xl bg-zinc-900 p-1 w-48 max-w-xs flex h-64 items-center flex-row justify-center border-black">
+              <div className="space-y-7 ">
+                <div className="py-20 ">
                   <div className="text-2xl">Card List</div>
                 </div>
               </div>
