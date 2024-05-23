@@ -1,7 +1,5 @@
 "use client";
-import React, { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import React, { useState, useEffect } from "react";
 import Overlay from "@/components/LoginOverlay/OverLay";
 import Home from "@/components/Home";
 import NewProject from "@/components/NewProject";
@@ -9,30 +7,22 @@ import PopularProjects from "@/components/PopularProjects";
 
 function Page() {
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const [activeComponent, setActiveComponent] = useState("home");
 
   const toggleOverlay = () => {
     setIsOverlayVisible(!isOverlayVisible);
   };
 
-  const [showHome, setShowHome] = useState(false);
-  const [showNewProject, setShowNewProject] = useState(false);
-  const [showPopularProject, setShowPopularProject] = useState(false);
-
-  const handlePopularProjects = () => {
-    setShowPopularProject(true);
-    setShowNewProject(false);
+  const handleHomeClick = () => {
+    setActiveComponent("home");
   };
 
   const handleNewProject = () => {
-    setShowNewProject(true);
-    setShowHome(false);
-    setShowPopularProject(false);
+    setActiveComponent("newProject");
   };
 
-  const handleHomeClick = () => {
-    setShowHome(true);
-    setShowNewProject(false);
-    setShowPopularProject(false);
+  const handlePopularProjects = () => {
+    setActiveComponent("popularProjects");
   };
 
   return (
@@ -56,16 +46,17 @@ function Page() {
           </div>
         </div>
         <div className="pb-5">
-          {" "}
           <button onClick={toggleOverlay}>Sign in</button>
           <Overlay isVisible={isOverlayVisible} onClose={toggleOverlay} />
         </div>
       </div>
 
-      {/* Scroll List and search bar */}
-      {showHome && <Home />}
-      {showNewProject && <NewProject />}
-      {showPopularProject && !showNewProject && <PopularProjects />}
+      {/* Main Content */}
+      <div className="ml-56 p-4 flex-grow">
+        {activeComponent === "home" && <Home />}
+        {activeComponent === "newProject" && <NewProject />}
+        {activeComponent === "popularProjects" && <PopularProjects />}
+      </div>
     </div>
   );
 }
