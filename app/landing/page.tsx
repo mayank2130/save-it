@@ -52,7 +52,7 @@ function Page() {
       </div>
 
       {/* Main Content */}
-      <div className="ml-56 p-4 flex-grow">
+      <div className="p-4 flex-grow">
         {activeComponent === "home" && <Home />}
         {activeComponent === "newProject" && <NewProject />}
         {activeComponent === "popularProjects" && <PopularProjects />}

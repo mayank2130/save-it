@@ -21,8 +21,8 @@ function LoginHeader() {
   return (
     <>
       <div
-        className={`pl-10 pr-10 py-4 flex flex-row items-center justify-between z-10  ${
-          isDarkMode ? " text-white" : "bg-white text-black"
+        className={`pl-10 pr-10 py-4 flex flex-row items-center justify-between z-10 ${
+          isDarkMode ? "text-white" : "bg-white text-black"
         }`}
       >
         <div className="flex flex-row gap-20 items-center">
