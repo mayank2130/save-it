@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { badgeVariants } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import DarkMode from "@/components/DarkMode";
 import Link from "next/link";
 import { Button, buttonVariants } from "./ui/button";
 import { Camera } from "lucide-react";
@@ -40,44 +39,15 @@ function Home() {
   return (
     <div className="flex ml-64 flex-col flex-grow">
       <div className="flex flex-row  space-x-10">
-        <div className="py-10">
-          <div className="bg-gray-400 p-2 rounded-2xl w-60 max-w-sm">
-            Search
-          </div>
+        <div className="">
+          <div className="text-2xl">Start a new project</div>
         </div>
-        <div className="py-10 space-x-5">
-          <Link
-            href=""
-            className={cn("p-3", badgeVariants({ variant: "secondary" }))}
-          >
-            Badge
-          </Link>
-          <Link
-            href=""
-            className={cn("p-3", badgeVariants({ variant: "secondary" }))}
-          >
-            Badge
-          </Link>
-          <Link
-            href=""
-            className={cn("p-3", badgeVariants({ variant: "secondary" }))}
-          >
-            Badge
-          </Link>
-          <Link
-            href=""
-            className={cn("p-3", badgeVariants({ variant: "secondary" }))}
-          >
-            Badge
-          </Link>
-        </div>
-        <DarkMode />
       </div>
 
       <div className="shadow-md pt-10 pl-6 pr-6">
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 p-4 bg-gray-100 dark:bg-gray-800"
+          className="space-y-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg"
         >
           <input
             type="text"

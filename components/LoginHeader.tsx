@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import DarkMode from "./DarkMode";
 import { useRouter } from "next/navigation";
 
 function LoginHeader() {
@@ -15,7 +14,6 @@ function LoginHeader() {
           <Button onClick={() => router.push("/landing")} variant="outline">
             Get Started
           </Button>
-          <DarkMode />
         </div>
       </div>
     </>

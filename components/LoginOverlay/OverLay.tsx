@@ -30,7 +30,7 @@ const Overlay: React.FC<OverlayProps> = ({ isVisible, onClose }) => {
         <input
           type="text"
           placeholder="Input 1"
-          className="mb-4 p-2 border rounded w-full"
+          className="mb-4 p-2 border rounded w-full bg-white"
         />
         <button className="bg-black text-white p-3 rounded-3xl w-56">
           Continue
