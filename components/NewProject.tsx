@@ -5,8 +5,30 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button, buttonVariants } from "./ui/button";
 import { Camera } from "lucide-react";
+import { Payment, columns } from "@/app/new-project/columns";
+import { DataTable } from "@/app/new-project/data-table";
+import AssignTasks from "./testing/AssignTask";
+// interfaces/Task.ts
+export interface Task {
+  id: number;
+  title: string;
+  completed: boolean;
+}
 
-function Home() {
+const defaultTasks: Task[] = [
+  { id: 1, title: "Default Task 1", completed: false },
+  { id: 2, title: "Default Task 2", completed: true },
+];
+
+interface NewProjectProps {
+  data: Payment[];
+  columns: any[];
+}
+
+const NewProject: React.FC<NewProjectProps> = ({ data, columns }) => {
+  const [tasks, setTasks] = useState<Task[]>(defaultTasks);
+  const [newTaskTitle, setNewTaskTitle] = useState<string>("");
+
   const [projectDetails, setProjectDetails] = useState({
     name: "",
     description: "",
@@ -16,7 +38,7 @@ function Home() {
     taskAssigned: "",
     budget: "",
     resources: "",
-    tasks: "",
+    tasks: defaultTasks,
     deliverables: "",
     priority: "medium",
     status: "planning",
@@ -26,9 +48,47 @@ function Home() {
     tags: "",
   });
 
-  const handleChange = (e: any) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setProjectDetails({ ...projectDetails, [name]: value });
+    setProjectDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
+  };
+
+  const addTask = () => {
+    if (newTaskTitle.trim()) {
+      const newTask: Task = {
+        id: projectDetails.tasks.length + 1,
+        title: newTaskTitle,
+        completed: false,
+      };
+      setProjectDetails((prevDetails) => ({
+        ...prevDetails,
+        tasks: [...prevDetails.tasks, newTask],
+      }));
+      setNewTaskTitle("");
+    }
+  };
+
+  const removeTask = (taskId: number) => {
+    setProjectDetails((prevDetails) => ({
+      ...prevDetails,
+      tasks: prevDetails.tasks.filter((task) => task.id !== taskId),
+    }));
+  };
+
+  const toggleTaskCompletion = (taskId: number) => {
+    setProjectDetails((prevDetails) => ({
+      ...prevDetails,
+      tasks: prevDetails.tasks.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task
+      ),
+    }));
   };
 
   const handleSubmit = (e: any) => {
@@ -89,14 +149,48 @@ function Home() {
             </div>
           </div>
           <div className="flex flex-col gap-2 flex-1">
-            <label className=" ">Create Tasks</label>
-            <textarea
+            {/* <textarea
               name="tasks"
               placeholder="Task List"
               value={projectDetails.tasks}
               onChange={handleChange}
               className="w-full p-2 border rounded-md bg-white text-black dark:bg-gray-700 dark:text-white dark:border-gray-600"
-            />
+            /> */}
+            <div className="flex flex-col gap-2 flex-1">
+              <label>Create Tasks</label>
+              {/* <div className="bg-white dark:bg-slate-950">
+                <DataTable columns={columns} data={data} />
+              </div> */}
+              <ul>
+                {projectDetails.tasks.map((task) => (
+                  <li key={task.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={task.completed}
+                        onChange={() => toggleTaskCompletion(task.id)}
+                      />
+                      {task.title}
+                      <button type="button" onClick={() => removeTask(task.id)}>
+                        Remove
+                      </button>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+              <AssignTasks />
+              <div>
+                <input
+                  type="text"
+                  value={newTaskTitle}
+                  onChange={(e) => setNewTaskTitle(e.target.value)}
+                  placeholder="New task title"
+                />
+                <button type="button" onClick={() => addTask()}>
+                  Add Task
+                </button>
+              </div>
+            </div>
           </div>
           <div className="flex flex-row gap-5 flex-1">
             <div className="flex flex-col gap-2 flex-1">
@@ -210,6 +304,6 @@ function Home() {
       </div>
     </div>
   );
-}
+};
 
-export default Home;
+export default NewProject;

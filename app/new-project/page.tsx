@@ -1,8 +1,25 @@
 import OverlayLogin from "@/components/OverlayLogin";
 import React from "react";
 import NewProject from "@/components/NewProject";
+import { Payment, columns } from "./columns";
+import { DataTable } from "./data-table";
 
-function page() {
+async function getData(): Promise<Payment[]> {
+  // Fetch data from your API here.
+  return [
+    {
+      id: "728ed52f",
+      amount: 100,
+      status: "pending",
+      email: "m@example.com",
+    },
+    // ...
+  ];
+}
+
+async function page() {
+  const data = await getData();
+
   return (
     <div className="flex flex-col lg:flex-row">
       {/* Side Navigation */}
@@ -12,7 +29,10 @@ function page() {
         </div>
       </div>
       <div className="p-4 flex-grow">
-        <NewProject />
+        {/* <div className="container mx-auto py-10">
+          <DataTable columns={columns} data={data} />
+        </div> */}
+        <NewProject data={data} columns={columns} />
       </div>
     </div>
   );
