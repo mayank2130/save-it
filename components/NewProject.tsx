@@ -1,6 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Payment, columns } from "@/app/new-project/columns";
+import { Employee } from "./testing/interface";
+import {
+  fetchTasks,
+  fetchEmployees,
+  assignTask,
+  createTask,
+} from "@/components/testing/api";
 
 // interfaces/Task.ts
 export interface Task {
@@ -31,9 +38,29 @@ interface NewProjectProps {
 }
 
 const NewProject: React.FC<NewProjectProps> = ({ data, columns }) => {
+  let alltask: Task[] = [
+    { id: 1, title: "Task 1", description: "Description 1", completed: true },
+    { id: 2, title: "Task 2", description: "Description 2", completed: true },
+    // Add more tasks as needed
+  ];
+
+  let allemployees: Employee[] = [
+    { id: 1, name: "Joe Smith", email: "joe@example.com" },
+    { id: 2, name: "Jane Doe", email: "jane@example.com" },
+    // Add more employees as needed
+  ];
+
   const [tasks, setTasks] = useState<Task[]>(defaultTasks);
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
   const [newTaskDescription, setNewTaskDescription] = useState<string>("");
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [selectedTaskIds, setSelectedTaskIds] = useState<Set<number>>(
+    new Set()
+  );
+  const [message, setMessage] = useState<string | null>(null);
+  useEffect(() => {
+    setEmployees(allemployees);
+  }, []);
 
   const [projectDetails, setProjectDetails] = useState({
     name: "",
@@ -90,6 +117,32 @@ const NewProject: React.FC<NewProjectProps> = ({ data, columns }) => {
     }));
   };
 
+  const handleAssign = (taskId: number) => {
+    const newSelectedTaskIds = new Set(selectedTaskIds);
+    if (newSelectedTaskIds.has(taskId)) {
+      newSelectedTaskIds.delete(taskId);
+    } else {
+      newSelectedTaskIds.add(taskId);
+    }
+    setSelectedTaskIds(newSelectedTaskIds);
+  };
+
+  const handleSelectEmployee = async (employeeId: number, taskId: number) => {
+    const response = await assignTask(taskId, employeeId);
+    if (response.ok) {
+      const assignedTask = projectDetails.tasks.find((task) => task.id === taskId);
+      const assignedEmployee = employees.find(
+        (employee) => employee.id === employeeId
+      );
+      setMessage(
+        `Task "${assignedTask?.title}" assigned to ${assignedEmployee?.name} successfully!`
+      );
+      setTasks(await fetchTasks());
+    } else {
+      setMessage("Failed to assign task.");
+    }
+  };
+
   const toggleTaskCompletion = (taskId: number) => {
     setProjectDetails((prevDetails) => ({
       ...prevDetails,
@@ -111,7 +164,6 @@ const NewProject: React.FC<NewProjectProps> = ({ data, columns }) => {
           <div className="text-2xl">Start a new project</div>
         </div>
       </div>
-
       <div className="shadow-md pt-10 pl-6 pr-6">
         <form
           onSubmit={handleSubmit}
@@ -159,28 +211,58 @@ const NewProject: React.FC<NewProjectProps> = ({ data, columns }) => {
           <div className="flex flex-col gap-2 flex-1">
             <div className="flex flex-col gap-2 flex-1">
               <label>Create Tasks</label>
+              {message && <div className="alert">{message}</div>}
               <ul>
                 {projectDetails.tasks.map((task) => (
                   <li key={task.id}>
-                    <label>
-                      <div className="flex flex-1 flex-row items-center">
-                        <input
-                          type="checkbox"
-                          checked={task.completed}
-                          className="size-4 m-2"
-                          onChange={() => toggleTaskCompletion(task.id)}
-                        />
-                        <p className="mr-1">{task.title}</p>
-                        <p className="ml-10">Description: {task.description}</p>
+                    <div className="flex flex-1 flex-row items-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedTaskIds.has(task.id)}
+                        className="size-4 m-2"
+                        onChange={() => handleAssign(task.id)}
+                      />
+                      <p className="mr-1 pointer-events-none">{task.title}</p>
+                      <p className="ml-10 pointer-events-none">
+                        Description: {task.description}
+                      </p>
+                      <div className="pl-2">
+                        <button
+                          className="p-2 bg-blue-700 rounded-sm"
+                          onClick={() => handleAssign(task.id)}
+                        >
+                          Assign
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        className="p-2 bg-red-600 rounded-lg mb-4 m-2"
-                        onClick={() => removeTask(task.id)}
-                      >
-                        Delete
-                      </button>
-                    </label>
+                    </div>
+                    {selectedTaskIds.has(task.id) && (
+                      <div className="flex flex-col">
+                        <h2 className="mb-2">Employees</h2>
+                        <select
+                          className="border rounded-md p-2"
+                          onChange={(e) =>
+                            handleSelectEmployee(
+                              parseInt(e.target.value),
+                              task.id
+                            )
+                          }
+                        >
+                          <option value="">Select Employee</option>
+                          {employees.map((employee) => (
+                            <option key={employee.id} value={employee.id}>
+                              {employee.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      className="p-2 bg-red-600 rounded-lg mb-4 m-2"
+                      onClick={() => removeTask(task.id)}
+                    >
+                      Delete
+                    </button>
                   </li>
                 ))}
               </ul>

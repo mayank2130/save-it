@@ -1,14 +1,14 @@
 export interface Task {
-    id: string;
-    title: string;
-    description: string;
-    assignedTo?: string; // employee id
-  }
-  
-  export interface Employee {
-    id: string;
-    name: string;
-    email: string;
-  }
+  id: number;
+  title: string;
+  description: string;
+  completed: boolean;
+  assignedTo?: string; // employee id
+}
 
-  
+export interface Employee {
+  id: number;
+  name: string;
+  email: string;
+}
+

@@ -52,6 +52,7 @@ export const AssignTasks: React.FC = () => {
       id: Date.now().toString(),
       title: newTaskTitle,
       description: newTaskDescription,
+      completed: true,
     };
     await createTask(newTask);
     setTasks(await fetchTasks());
