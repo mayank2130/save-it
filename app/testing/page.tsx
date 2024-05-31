@@ -1,6 +1,6 @@
 // page.tsx
 import React from 'react';
-import AssignTasks from '@/components/testing/AssignTask';
+import {AssignTasks} from '@/components/testing/AssignTask';
 
 const Page: React.FC = () => {
   return (

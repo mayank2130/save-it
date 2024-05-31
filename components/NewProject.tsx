@@ -1,23 +1,28 @@
 "use client";
 import React, { useState } from "react";
-import { badgeVariants } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { Button, buttonVariants } from "./ui/button";
-import { Camera } from "lucide-react";
 import { Payment, columns } from "@/app/new-project/columns";
-import { DataTable } from "@/app/new-project/data-table";
-import AssignTasks from "./testing/AssignTask";
+
 // interfaces/Task.ts
 export interface Task {
   id: number;
   title: string;
+  description: string;
   completed: boolean;
 }
 
 const defaultTasks: Task[] = [
-  { id: 1, title: "Default Task 1", completed: false },
-  { id: 2, title: "Default Task 2", completed: true },
+  {
+    id: 1,
+    title: "Default Task 1",
+    description: "default description",
+    completed: false,
+  },
+  {
+    id: 2,
+    title: "Default Task 2",
+    description: "default description",
+    completed: true,
+  },
 ];
 
 interface NewProjectProps {
@@ -28,6 +33,7 @@ interface NewProjectProps {
 const NewProject: React.FC<NewProjectProps> = ({ data, columns }) => {
   const [tasks, setTasks] = useState<Task[]>(defaultTasks);
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
+  const [newTaskDescription, setNewTaskDescription] = useState<string>("");
 
   const [projectDetails, setProjectDetails] = useState({
     name: "",
@@ -65,6 +71,7 @@ const NewProject: React.FC<NewProjectProps> = ({ data, columns }) => {
       const newTask: Task = {
         id: projectDetails.tasks.length + 1,
         title: newTaskTitle,
+        description: newTaskDescription,
         completed: false,
       };
       setProjectDetails((prevDetails) => ({
@@ -72,6 +79,7 @@ const NewProject: React.FC<NewProjectProps> = ({ data, columns }) => {
         tasks: [...prevDetails.tasks, newTask],
       }));
       setNewTaskTitle("");
+      setNewTaskDescription("");
     }
   };
 
@@ -149,44 +157,55 @@ const NewProject: React.FC<NewProjectProps> = ({ data, columns }) => {
             </div>
           </div>
           <div className="flex flex-col gap-2 flex-1">
-            {/* <textarea
-              name="tasks"
-              placeholder="Task List"
-              value={projectDetails.tasks}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-md bg-white text-black dark:bg-gray-700 dark:text-white dark:border-gray-600"
-            /> */}
             <div className="flex flex-col gap-2 flex-1">
               <label>Create Tasks</label>
-              {/* <div className="bg-white dark:bg-slate-950">
-                <DataTable columns={columns} data={data} />
-              </div> */}
               <ul>
                 {projectDetails.tasks.map((task) => (
                   <li key={task.id}>
                     <label>
-                      <input
-                        type="checkbox"
-                        checked={task.completed}
-                        onChange={() => toggleTaskCompletion(task.id)}
-                      />
-                      {task.title}
-                      <button type="button" onClick={() => removeTask(task.id)}>
-                        Remove
+                      <div className="flex flex-1 flex-row items-center">
+                        <input
+                          type="checkbox"
+                          checked={task.completed}
+                          className="size-4 m-2"
+                          onChange={() => toggleTaskCompletion(task.id)}
+                        />
+                        <p className="mr-1">{task.title}</p>
+                        <p className="ml-10">Description: {task.description}</p>
+                      </div>
+                      <button
+                        type="button"
+                        className="p-2 bg-red-600 rounded-lg mb-4 m-2"
+                        onClick={() => removeTask(task.id)}
+                      >
+                        Delete
                       </button>
                     </label>
                   </li>
                 ))}
               </ul>
-              <AssignTasks />
-              <div>
+              <div className="flex flex-1 flex-row  gap-4">
                 <input
                   type="text"
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
                   placeholder="New task title"
+                  className="p-2 border rounded-md bg-white text-black dark:bg-gray-700 dark:text-white dark:border-gray-600"
                 />
-                <button type="button" onClick={() => addTask()}>
+                <input
+                  type="text"
+                  placeholder="Task Description"
+                  value={newTaskDescription}
+                  onChange={(e) => setNewTaskDescription(e.target.value)}
+                  className="w-full p-2 border rounded-md bg-white text-black dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  className="p-3 bg-blue-600 rounded-lg m-4"
+                  type="button"
+                  onClick={() => addTask()}
+                >
                   Add Task
                 </button>
               </div>
